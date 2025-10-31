@@ -1,8 +1,5 @@
-function BlogList(props) {
-    const blogs = props.blogs;
-    const title = props.title;
+function BlogList({blogs, title, handleDelete}) {
 
-    console.log(props, blogs);
     return (
         <div className="home">
             <h2>{title}</h2>
@@ -10,6 +7,7 @@ function BlogList(props) {
             <div className="blog-preview" key={blog.id}>
                 <h2>{ blog.title}</h2>
                 <p>Written by { blog.author}</p>
+                <button onClick={() => {handleDelete(blog.id)}}>delete blog</button>
             </div>
         ))}
     </div>
