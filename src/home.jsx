@@ -3,20 +3,32 @@ import BlogList from "./BlogList";
 
 function Home() {
     const [blogs,setblogs] = useState(null);
-    
-// useEffect runs after every render
-//fetch merr response dokumentin nga serveri
-//then e konverton ne json
-//then e merr daten dhe e vendos ne state
+    const [isPending,setIsPending] = useState(true);
+    const [error,setError] = useState(null);
     useEffect(() => {
         fetch('http://localhost:8000/blogs')
-        .then(res => { return res.json(); })
-        .then(data => {setblogs(data); });
-    }, []);
+        .then(res => { 
+            if(!res.ok){
+                throw Error('could not fetch the data for that resource');
+            }
+            return res.json(); 
+        })
+        .then(data => {
+        setblogs(data);
+        setIsPending(false);
+        setError(null);
+         })
+         .catch((err) => {
+            setError(err.message);
+            setIsPending(false);
+         })}, []);
 
     return(
         <div className="home">
-        {blogs && <BlogList blogs={blogs} title= "All Blogs"/>}
+            {error && <div>{error}</div>}
+            {isPending && <div>Loading...</div>}
+            {blogs && <BlogList blogs={blogs} title= "All Blogs"/>}
+
         </div>
         
     );
